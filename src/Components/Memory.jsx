@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import Grid from "./Grid";
 
 const array = [
-  { val: 1, id: 1, isFlipped: false },
-  { val: 2, id: 2, isFlipped: false },
-  { val: 3, id: 3, isFlipped: false },
-  { val: 4, id: 4, isFlipped: false },
-  { val: 1, id: 5, isFlipped: false },
-  { val: 2, id: 6, isFlipped: false },
-  { val: 3, id: 7, isFlipped: false },
-  { val: 4, id: 8, isFlipped: false },
+  { val: 1, id: 1, isFlipped: false, isPaired: false },
+  { val: 2, id: 2, isFlipped: false, isPaired: false },
+  { val: 3, id: 3, isFlipped: false, isPaired: false },
+  { val: 4, id: 4, isFlipped: false, isPaired: false },
+  { val: 1, id: 5, isFlipped: false, isPaired: false },
+  { val: 2, id: 6, isFlipped: false, isPaired: false },
+  { val: 3, id: 7, isFlipped: false, isPaired: false },
+  { val: 4, id: 8, isFlipped: false, isPaired: false },
 ];
 function Memory() {
   const [inputNumber, setInputNumber] = useState(0);
@@ -26,10 +26,18 @@ function Memory() {
     return recentData;
   }
 
+  function pairValue(input, currentData) {
+    const recentData = currentData.map((item) =>
+      item.val === input.val && item.id === input.id
+        ? { ...item, isPaired: !item.isPaired }
+        : item
+    );
+    return recentData;
+  }
+
   function handleTileClick(value) {
     if (!tile1) {
       setData(() => flipValue(value, data));
-      // this value is the issue
       setTile1({ ...value, isFlipped: !value.isFlipped });
     } else if (tile1 && !tile2) {
       setData(() => flipValue(value, data));
@@ -40,6 +48,11 @@ function Memory() {
   useEffect(
     function () {
       if (tile1 && tile2 && tile1.val == tile2.val) {
+        setData((prevData) => {
+          let updatedData = pairValue(tile1, prevData);
+          updatedData = pairValue(tile2, updatedData);
+          return updatedData;
+        });
         setTile1(null);
         setTile2(null);
       } else if (tile1 && tile2 && tile1.val != tile2.val) {
@@ -74,7 +87,7 @@ function Memory() {
               className="w-16 border-slate-700 rounded px-2 py-1"
             />
           </form>
-          <div className="flex   p-2 my-2 flex-wrap justify-center">
+          <div className="flex p-2 my-2 flex-wrap justify-center">
             {data.map((value) => {
               return (
                 <Grid
