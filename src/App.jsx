@@ -1,9 +1,10 @@
+import Memory from "./Components/Memory";
 import "./index.css";
 function App() {
   return (
-    <>
-      <p className="text-green-900">Hello</p>
-    </>
+    <main>
+      <Memory />
+    </main>
   );
 }
 
