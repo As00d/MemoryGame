@@ -57,11 +57,13 @@ function Memory() {
         setTile2(null);
       } else if (tile1 && tile2 && tile1.val != tile2.val) {
         if (tile1.isFlipped && tile2.isFlipped) {
-          setData((prevData) => {
-            let updatedData = flipValue(tile1, prevData);
-            updatedData = flipValue(tile2, updatedData);
-            return updatedData;
-          });
+          setTimeout(() => {
+            setData((prevData) => {
+              let updatedData = flipValue(tile1, prevData);
+              updatedData = flipValue(tile2, updatedData);
+              return updatedData;
+            });
+          }, 750);
 
           setTile1((prev) => null);
           setTile2((prev) => null);
