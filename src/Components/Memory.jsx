@@ -1,49 +1,40 @@
 import { useEffect, useState } from "react";
 import Grid from "./Grid";
 
-const array = [
-  { val: 1, id: 1, isFlipped: false, isPaired: false },
-  { val: 2, id: 2, isFlipped: false, isPaired: false },
-  { val: 3, id: 3, isFlipped: false, isPaired: false },
-  { val: 4, id: 4, isFlipped: false, isPaired: false },
-  { val: 1, id: 5, isFlipped: false, isPaired: false },
-  { val: 2, id: 6, isFlipped: false, isPaired: false },
-  { val: 3, id: 7, isFlipped: false, isPaired: false },
-  { val: 4, id: 8, isFlipped: false, isPaired: false },
-];
+function createArray(inputNumber) {
+  let numberOfTiles = inputNumber * inputNumber;
+  numberOfTiles = numberOfTiles % 2 ? numberOfTiles - 1 : numberOfTiles;
+
+  const values = [];
+  for (let i = 1; i <= numberOfTiles / 2; i++) {
+    values.push(i, i);
+  }
+  for (let i = values.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [values[i], values[j]] = [values[j], values[i]];
+  }
+  const array = values.map((val, index) => ({
+    val,
+    id: index + 1,
+    isFlipped: false,
+    isPaired: false,
+  }));
+  return array;
+}
+
 function Memory() {
-  const [inputNumber, setInputNumber] = useState(0);
+  const [inputNumber, setInputNumber] = useState(2);
   const [tile1, setTile1] = useState(null);
   const [tile2, setTile2] = useState(null);
-  const [data, setData] = useState(array);
+  const [data, setData] = useState([]);
 
-  function flipValue(input, currentData) {
-    const recentData = currentData.map((item) =>
-      item.val === input.val && item.id === input.id
-        ? { ...item, isFlipped: !item.isFlipped }
-        : item
-    );
-    return recentData;
-  }
-
-  function pairValue(input, currentData) {
-    const recentData = currentData.map((item) =>
-      item.val === input.val && item.id === input.id
-        ? { ...item, isPaired: !item.isPaired }
-        : item
-    );
-    return recentData;
-  }
-
-  function handleTileClick(value) {
-    if (!tile1) {
-      setData(() => flipValue(value, data));
-      setTile1({ ...value, isFlipped: !value.isFlipped });
-    } else if (tile1 && !tile2) {
-      setData(() => flipValue(value, data));
-      setTile2({ ...value, isFlipped: !value.isFlipped });
-    }
-  }
+  useEffect(
+    function () {
+      const arr = createArray(inputNumber);
+      setData(arr);
+    },
+    [inputNumber]
+  );
 
   useEffect(
     function () {
@@ -73,9 +64,43 @@ function Memory() {
     },
     [tile1, tile2]
   );
+
+  function flipValue(input, currentData) {
+    const recentData = currentData.map((item) =>
+      item.val === input.val && item.id === input.id
+        ? { ...item, isFlipped: !item.isFlipped }
+        : item
+    );
+    return recentData;
+  }
+
+  function pairValue(input, currentData) {
+    const recentData = currentData.map((item) =>
+      item.val === input.val && item.id === input.id
+        ? { ...item, isPaired: !item.isPaired }
+        : item
+    );
+    return recentData;
+  }
+
+  function handleTileClick(value) {
+    if (!tile1) {
+      setData(() => flipValue(value, data));
+      setTile1({ ...value, isFlipped: !value.isFlipped });
+    } else if (tile1 && !tile2) {
+      setData(() => flipValue(value, data));
+      setTile2({ ...value, isFlipped: !value.isFlipped });
+    }
+  }
+
+  function handleReset() {
+    setData(createArray(2));
+    setInputNumber(2);
+  }
+
   return (
-    <div className="bg-slate-100 h-screen flex flex-col border justify-center items-center">
-      <div className="p-4 m-2 max-w-96 shadow-2xl bg-slate-300 h-96">
+    <div className="bg-slate-100 min-h-screen flex flex-col border justify-center items-center">
+      <div className="p-4 m-2 max-w-4xl shadow-2xl bg-slate-300 min-h-96">
         <div className="flex flex-col items-center p-4">
           <h1 className="text-3xl font-bold my-2">Memory Game</h1>
           <form className="my-2">
@@ -84,6 +109,8 @@ function Memory() {
               type="number"
               name=""
               id=""
+              max={10}
+              min={2}
               value={inputNumber}
               onChange={(e) => setInputNumber(e.target.value)}
               className="w-16 border-slate-700 rounded px-2 py-1"
@@ -100,7 +127,10 @@ function Memory() {
               );
             })}
           </div>
-          <button className="bg-orange-400 p-2 rounded text-white hover:bg-orange-600">
+          <button
+            className="bg-orange-400 p-2 rounded text-white hover:bg-orange-600"
+            onClick={handleReset}
+          >
             Reset Game
           </button>
         </div>
