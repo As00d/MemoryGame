@@ -9,6 +9,7 @@ function Grid({ value, handleTileClick }) {
           : "h-16 w-16  bg-slate-400 text-white border rounded-lg box-border bg-blue-400"
       } `}
       onClick={() => handleTileClick(value)}
+      disabled={isFlipped && isPaired ? true : false}
     >
       {isFlipped ? value.val : " "}
     </button>
