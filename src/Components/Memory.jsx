@@ -99,10 +99,10 @@ function Memory() {
   }
 
   return (
-    <div className="bg-slate-100 min-h-screen flex flex-col border justify-center items-center">
-      <div className="p-4 m-2 max-w-4xl shadow-2xl bg-slate-300 min-h-96">
+    <div className="bg-[#14213d] min-h-screen flex flex-col justify-center items-center">
+      <div className="p-4 m-2 max-w-4xl shadow-2xl bg-[#e5e5e5] rounded-xl min-h-[560px] min-w-[200px]">
         <div className="flex flex-col items-center p-4">
-          <h1 className="text-3xl font-bold my-2">Memory Game</h1>
+          <h1 className="text-4xl my-2">Memory Game</h1>
           <form className="my-2">
             <label htmlFor=""> Grid size: </label>
             <input
@@ -128,7 +128,7 @@ function Memory() {
             })}
           </div>
           <button
-            className="bg-orange-400 p-2 rounded text-white hover:bg-orange-600"
+            className="bg-[#14213d] p-3 rounded text-white shadow-2xl"
             onClick={handleReset}
           >
             Reset Game
